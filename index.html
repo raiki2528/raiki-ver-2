@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0d12">
+    <title>プロフィール</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="identity">
+          <h1 class="identity-name">山元 来輝<span class="latin">Raiki Yamamoto</span></h1>
+          <p class="identity-title">Lotus Card 共同CEO</p>
+          <p class="identity-subtitle">Leverages U.S. DX Technician</p>
+        </div>
+        <img class="header-avatar" src="images/Raiki.jpg" alt="プロフィール写真">
+      </div>
+    </header>
+    <main class="card" role="main">
+      <section class="intro" aria-label="自己紹介">
+        <p>20歳起業家</p>
+        <p>アメリカ大学2年間留学→起業するため中退</p>
+        <p>趣味: サッカー、ピアノ、旅行</p>
+        <p><strong>ビジョン:</strong> まだ見ぬ世界へ</p>
+      </section>
+
+      <section class="sns" aria-label="SNS リンク">
+        <div class="sns-grid">
+          <a class="sns-btn" href="https://www.instagram.com/raiki_aer/" target="_blank" rel="noopener" aria-label="Instagram">
+            <img src="images/Instagram画像.jpg" alt="Instagram">
+            <span class="label">Instagram</span>
+          </a>
+          <a class="sns-btn" href="https://www.linkedin.com/in/raiki-yamamoto-047106277/" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <img src="images/LinkedIn画像.png" alt="LinkedIn">
+            <span class="label">LinkedIn</span>
+          </a>
+          <a class="sns-btn" href="https://note.com/raiki4416" target="_blank" rel="noopener" aria-label="note">
+            <img src="images/Note画像.webp" alt="note">
+            <span class="label">note</span>
+          </a>
+          <a class="sns-btn" href="mailto:soccer.6.yama6@gmail.com" aria-label="Email">
+            <img src="images/Mail画像.png" alt="Email">
+            <span class="label">Email</span>
+          </a>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <small>© <span id="year"></span> Raiki Yamamoto</small>
+      </footer>
+    </main>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear()
+    </script>
+  </body>
+  </html>
+
+
