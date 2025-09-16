@@ -17,25 +17,46 @@ body {
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  display: flex;
+  flex-direction: column;
 }
 
-.site-header {
-  position: sticky;
-  top: 0;
-  background: linear-gradient(180deg, rgba(11,13,18,.85), rgba(11,13,18,.65));
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(255,255,255,.06);
-  margin-top: 16px;
-}
-.header-inner {
+.site-header { margin-top: 16px; }
+.hero {
   max-width: 1440px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: 16px;
-  padding: 14px 16px;
+  background: url('images/Raiki_Hawaii.jpg') center/cover no-repeat, linear-gradient(180deg, rgba(11,13,18,.3), rgba(11,13,18,.5));
+  border: 3px solid rgba(255,255,255,.08);
+  border-radius: 24px;
 }
+.hero-inner {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  padding: 24px 16px;
+  min-height: 160px;
+}
+.hero-avatar {
+  width: 128px;
+  height: 128px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 3px solid rgba(255,255,255,.85);
+  box-shadow: 0 8px 30px rgba(0,0,0,.45);
+  background: #111;
+}
+.identity-block {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  text-align: left;
+  display: grid;
+  justify-items: start;
+  padding: 12px 16px 8px;
+}
+.identity-block .identity-name,
+.identity-block .identity-title,
+.identity-block .identity-subtitle { text-align: left; }
 .identity-name {
   margin: 0;
   font-size: 18px;
@@ -45,14 +66,6 @@ body {
 .identity-name .latin { margin-left: 8px; font-weight: 600; opacity: .9; }
 .identity-title { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
 .identity-subtitle { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
-.header-avatar {
-  width: 108px;
-  height: 108px;
-  border-radius: 999px;
-  object-fit: cover;
-  border: 2px solid rgba(255,255,255,.08);
-  box-shadow: 0 4px 18px rgba(0,0,0,.45);
-}
 
 .card {
   display: block;
@@ -60,16 +73,27 @@ body {
   padding: 20px 16px 20px;
 }
 
+main.card { flex: 1 0 auto; }
+.footer { flex-shrink: 0; margin-top: 12px; color: var(--muted); text-align: center; padding-bottom: 12px; }
+
 .intro {
   display: grid;
   gap: 4px;
   max-width: 40ch;
   margin: 2px auto 0;
   color: var(--text);
+  text-align: left;
+  justify-items: start;
 }
-.intro p { margin: 0; line-height: 1.7; color: var(--muted); }
+.intro-title {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+}
+.intro p { margin: 0; line-height: 1.7; color: var(--muted); text-align: left; }
 .intro p:first-child { color: var(--text); font-weight: 700; }
-.intro strong { color: var(--text); }
+.intro strong { color: var(--muted); font-weight: inherit; }
 
 .avatar {
   width: 108px;
@@ -160,10 +184,10 @@ body {
 /* 1行4列のまま。必要ならブレークポイントでサイズ調整 */
 
 @media (min-width: 480px) {
-  .header-inner { padding: 16px 20px; }
+  .hero-inner { padding: 32px 24px; min-height: 200px; }
   .identity-name { font-size: 20px; }
   .identity-title { font-size: 15px; }
-  .header-avatar { width: 128px; height: 128px; }
+  .hero-avatar { width: 144px; height: 144px; }
   .card { gap: 18px; }
   .avatar { width: 120px; height: 120px; }
   .name { font-size: 24px; }

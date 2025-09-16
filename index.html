@@ -12,17 +12,20 @@
   </head>
   <body>
     <header class="site-header">
-      <div class="header-inner">
-        <div class="identity">
-          <h1 class="identity-name">山元 来輝<span class="latin">Raiki Yamamoto</span></h1>
-          <p class="identity-title">Lotus Card 共同CEO</p>
-          <p class="identity-subtitle">Leverages U.S. DX Technician</p>
+      <div class="hero">
+        <div class="hero-inner">
+          <img class="hero-avatar" src="images/Raiki.jpg" alt="プロフィール写真">
         </div>
-        <img class="header-avatar" src="images/Raiki.jpg" alt="プロフィール写真">
       </div>
     </header>
+    <section class="identity-block" aria-label="プロフィール概要">
+      <h1 class="identity-name">山元 来輝<span class="latin">Raiki Yamamoto</span></h1>
+      <p class="identity-title">Lotus Card 共同CEO</p>
+      <p class="identity-subtitle">Leverages U.S. DX Technician</p>
+    </section>
     <main class="card" role="main">
       <section class="intro" aria-label="自己紹介">
+        <h2 class="intro-title">About me</h2>
         <p>20歳起業家</p>
         <p>アメリカ大学2年間留学→起業するため中退</p>
         <p>趣味: サッカー、ピアノ、旅行</p>
@@ -49,11 +52,11 @@
           </a>
         </div>
       </section>
-
-      <footer class="footer">
-        <small>© <span id="year"></span> Raiki Yamamoto</small>
-      </footer>
     </main>
+
+    <footer class="footer">
+      <small>© <span id="year"></span> Raiki Yamamoto</small>
+    </footer>
 
     <script>
       document.getElementById('year').textContent = new Date().getFullYear()
