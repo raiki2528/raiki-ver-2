@@ -161,7 +161,8 @@ main.card { flex: 1 0 auto; }
   align-items: center;
   justify-content: center;
   gap: 6px;
-  height: 84px;
+  width: 100%;
+  height: auto;
   aspect-ratio: 1 / 1;
   border-radius: 14px;
   background: #ffffff;
@@ -173,8 +174,8 @@ main.card { flex: 1 0 auto; }
   text-align: center;
 }
 .sns-btn img {
-  width: 36px;
-  height: 36px;
+  width: clamp(24px, 30%, 40px);
+  height: auto;
   object-fit: contain;
   display: block;
   margin: 0 auto;
@@ -193,8 +194,10 @@ main.card { flex: 1 0 auto; }
 @media (max-width: 400px) {
   .sns { padding: 0 12px; }
   .sns-grid { gap: 8px; }
-  .sns-btn { height: 72px; }
-  .sns-btn img { width: 32px; height: 32px; }
+}
+
+@media (max-width: 340px) {
+  .sns-grid { gap: 6px; }
 }
 
 @media (min-width: 480px) {
