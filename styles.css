@@ -189,6 +189,51 @@ main.card { flex: 1 0 auto; }
 .sns-btn:active { transform: translateY(0); }
 .sns-btn:focus-visible { outline: 0; box-shadow: 0 0 0 4px var(--ring); }
 
+/* Share/Save button section */
+.share-section {
+  padding: 20px var(--page-pad) 0;
+}
+
+.share-save-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, var(--accent) 0%, #5a96e8 100%);
+  border: none;
+  border-radius: 16px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(110, 168, 254, 0.3);
+}
+
+.share-save-btn img {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1);
+}
+
+.share-save-btn:hover {
+  background: linear-gradient(135deg, #5a96e8 0%, #4a85d1 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(110, 168, 254, 0.4);
+}
+
+.share-save-btn:active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(110, 168, 254, 0.3);
+}
+
+.share-save-btn:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 4px var(--ring);
+}
+
 /* 1行4列のまま。必要ならブレークポイントでサイズ調整 */
 
 @media (max-width: 400px) {

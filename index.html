@@ -4,11 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#0b0d12">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Raiki">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
     <title>プロフィール</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
   </head>
   <body>
     <header class="site-header">
@@ -35,7 +40,7 @@
       <section class="sns" aria-label="SNS リンク">
         <div class="sns-grid">
           <a class="sns-btn" href="https://www.instagram.com/raiki_aer/" target="_blank" rel="noopener" aria-label="Instagram">
-            <img src="images/Instagram.jpg" alt="Instagram">
+            <img src="images/Instagram.png" alt="Instagram">
             <span class="label">Instagram</span>
           </a>
           <a class="sns-btn" href="https://www.linkedin.com/in/raiki-yamamoto-047106277/" target="_blank" rel="noopener" aria-label="LinkedIn">
@@ -52,8 +57,15 @@
           </a>
         </div>
       </section>
+
+      <section class="share-section" aria-label="共有・保存">
+        <button class="share-save-btn" id="shareBtn">
+          <span>共有/ホーム画面に保存</span>
+        </button>
+      </section>
+
       <section class="schedule" aria-label="日程調整">
-        <p>オンラインでお話ししませんか？<a href="https://calendly.com/soccer-6-yama6/30min" target="_blank" rel="noopener">ここでスケジュール調整お願いします</a>。</p>
+        <p>オンラインでお話ししませんか？<a href="https://calendly.com/soccer-6-yama6/30min" target="_blank" rel="noopener">スケジュール調整</a>。</p>
       </section>
     </main>
 
@@ -63,6 +75,82 @@
 
     <script>
       document.getElementById('year').textContent = new Date().getFullYear()
+
+      // PWA Service Worker Registration
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+
+      // Web Share API and Add to Home Screen
+      const shareBtn = document.getElementById('shareBtn');
+      let deferredPrompt;
+      
+      // Listen for the beforeinstallprompt event
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+      });
+
+      async function shareOrInstall() {
+        // Check if PWA is already installed
+        if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+          // Already installed, just share
+          await shareProfile();
+          return;
+        }
+
+        // Check if we can show install prompt
+        if (deferredPrompt) {
+          const { outcome } = await deferredPrompt.prompt();
+          deferredPrompt = null;
+          
+          if (outcome === 'accepted') {
+            console.log('User accepted the install prompt');
+          } else {
+            console.log('User dismissed the install prompt');
+          }
+        } else {
+          // No install prompt available, try sharing
+          await shareProfile();
+        }
+      }
+      
+      async function shareProfile() {
+        const shareData = {
+          title: '山元 来輝 - Lotus Card 共同CEO',
+          text: 'Lotus Card 共同CEOのプロフィールをご覧ください',
+          url: window.location.href
+        };
+
+        try {
+          if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+            await navigator.share(shareData);
+          } else {
+            // Fallback: Copy to clipboard
+            await navigator.clipboard.writeText(window.location.href);
+            alert('URLをクリップボードにコピーしました！');
+          }
+        } catch (err) {
+          console.error('Error sharing: ', err);
+          // Final fallback: Copy to clipboard
+          try {
+            await navigator.clipboard.writeText(window.location.href);
+            alert('URLをクリップボードにコピーしました！');
+          } catch (clipboardErr) {
+            alert('共有できませんでした。URL: ' + window.location.href);
+          }
+        }
+      }
+
+      shareBtn.addEventListener('click', shareOrInstall);
     </script>
   </body>
   </html>
