@@ -65,7 +65,8 @@
       </section>
 
       <section class="schedule" aria-label="日程調整">
-        <p>オンラインでお話ししませんか？<a href="https://calendly.com/soccer-6-yama6/30min" target="_blank" rel="noopener">スケジュール調整</a>。</p>
+        <p>オンラインでお話ししませんか？</p>
+        <p><a href="https://calendly.com/soccer-6-yama6/30min" target="_blank" rel="noopener">スケジュール調整</a></p>
       </section>
     </main>
 
@@ -132,13 +133,12 @@
 
       function showIOSInstallInstructions() {
         const instructions = `
-📱 ホーム画面に追加する方法：
+ホーム画面追加手順
 
-1️⃣ Safariの下部にある「共有」ボタン（□↑）をタップ
-2️⃣ 「ホーム画面に追加」を選択
-3️⃣ 「追加」をタップ
-
-これで、アプリのように使用できます！
+1. Safari下部中央にある共有ボタンをタップ
+(※Safariでこのリンクを開いてください)
+2. 「ホーム画面に追加」を選択
+3. 「追加」をクリック
         `;
         
         if (confirm(instructions + '\n\n今すぐ共有しますか？')) {
@@ -156,20 +156,10 @@
         try {
           if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
             await navigator.share(shareData);
-          } else {
-            // Fallback: Copy to clipboard
-            await navigator.clipboard.writeText(window.location.href);
-            alert('URLをクリップボードにコピーしました！');
           }
         } catch (err) {
           console.error('Error sharing: ', err);
-          // Final fallback: Copy to clipboard
-          try {
-            await navigator.clipboard.writeText(window.location.href);
-            alert('URLをクリップボードにコピーしました！');
-          } catch (clipboardErr) {
-            alert('共有できませんでした。URL: ' + window.location.href);
-          }
+          // Silent fail - no alert message
         }
       }
 
