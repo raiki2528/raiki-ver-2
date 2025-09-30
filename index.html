@@ -8,14 +8,29 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Raiki">
     <link rel="apple-touch-icon" href="icons/icon-192x192.png">
-    <title>プロフィール</title>
+    <title>山元 来輝 | Raiki Yamamoto</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/Raiki.jpg" type="image/jpeg">
     <link rel="manifest" href="manifest.json">
   </head>
   <body>
+    <div id="save-options-modal" class="modal-overlay" style="display:none;">
+      <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="save-modal-title">
+        <p class="modal-title" id="save-modal-title">保存方法を選択</p>
+        
+        <div class="modal-actions">
+          <a href="data:text/vcard;charset=utf-8,BEGIN%3AVCARD%0AVERSION%3A3.0%0AFN%3ARaiki%20Yamamoto%0AORG%3ALotus%20Card%0ATITLE%3A%E5%85%B1%E5%90%8CCEO%0AEMAIL%3Asoccer.6.yama6%40gmail.com%0AURL%3Ahttps%3A%2F%2Fraiki-ver-2.vercel.app%2F%0AEND%3AVCARD" download="Raiki_Yamamoto.vcf" class="modal-button"><img src="images/連絡先.png" alt="連絡先" class="modal-icon">連絡先に保存</a>
+
+          <a id="mail-self-link" href="#" class="modal-button"><img src="images/メール.png" alt="メール" class="modal-icon">メールを自分に送信</a>
+
+          <button id="add-to-home-screen-button" class="modal-button">ホーム画面に追加</button>
+        </div>
+        <button id="close-modal-button" class="modal-close-button" aria-label="戻る">戻る</button>
+      </div>
+    </div>
     <header class="site-header">
       <div class="hero">
         <div class="hero-inner">
@@ -63,8 +78,8 @@
           <button class="share-btn" id="shareBtn">
             <span>共有</span>
           </button>
-          <button class="install-btn" id="installBtn">
-            <span>ホーム画面に保存</span>
+          <button class="install-btn" id="open-save-modal-button">
+            <span>情報の保存</span>
           </button>
         </div>
       </section>
@@ -97,7 +112,11 @@
 
       // Web Share API and Add to Home Screen
       const shareBtn = document.getElementById('shareBtn');
-      const installBtn = document.getElementById('installBtn');
+      const openSaveModalBtn = document.getElementById('open-save-modal-button');
+      const saveModal = document.getElementById('save-options-modal');
+      const closeModalBtn = document.getElementById('close-modal-button');
+      const addToHomeBtn = document.getElementById('add-to-home-screen-button');
+      const mailSelfLink = document.getElementById('mail-self-link');
       let deferredPrompt;
       
       // Listen for the beforeinstallprompt event
@@ -109,34 +128,83 @@
       // Share button functionality
       shareBtn.addEventListener('click', shareProfile);
 
-      // Install button functionality
-      installBtn.addEventListener('click', showInstallInstructions);
+      // Open modal
+      openSaveModalBtn.addEventListener('click', () => {
+        saveModal.style.display = 'flex';
+      });
+
+      // Close modal by button
+      closeModalBtn.addEventListener('click', () => {
+        saveModal.style.display = 'none';
+      });
+
+      // Close modal by clicking overlay
+      saveModal.addEventListener('click', (e) => {
+        if (e.target === saveModal) {
+          saveModal.style.display = 'none';
+        }
+      });
+
+      // Migrate original install logic to modal button
+      addToHomeBtn.addEventListener('click', () => {
+        saveModal.style.display = 'none';
+        showInstallInstructions();
+      });
+
+      
+
+      // Handle "メールを自分に送信" dynamically to set recipient
+      mailSelfLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Open mail composer without preset recipient
+
+        const subject = '【Lotus Card】Raiki Yamamoto様の連絡先';
+
+        // 名刺の持ち主の日本語名を見出しから取得（英字は除外）
+        const identityEl = document.querySelector('.identity-name');
+        let ownerNameJa = '名刺の持ち主';
+        if (identityEl) {
+          const cloned = identityEl.cloneNode(true);
+          const latin = cloned.querySelector('.latin');
+          if (latin) latin.remove();
+          ownerNameJa = (cloned.textContent || '').trim();
+        }
+
+        const body = [
+          'Lotus Card 共同CEOのRaiki Yamamoto様の連絡先です。',
+          '',
+          '✉️ 宛先（To）にご自身のメールアドレスを入力してから送信してください。',
+          `数十秒で${ownerNameJa}さんのLotusCard情報が保存され、いつでもメールから見返せます☺️`,
+          '',
+          '---',
+          '名前: Raiki Yamamoto',
+          '会社名: Lotus Card',
+          '役職: 共同CEO',
+          'メール: soccer.6.yama6@gmail.com',
+          'ウェブサイト: https://raiki-ver-2.vercel.app/',
+          '---'
+        ].join('\n');
+
+        const mailto = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        window.location.href = mailto;
+      });
 
       function showInstallInstructions() {
-        const instructions = `
-ホーム画面に追加する手順
-
-【iPhone/iPadの場合】
-
-Safariでウェブサイトを開く
-
-画面下部（または上部）の「共有」アイコンをタップ
-
-「ホーム画面に追加」を選択
-
-「追加」をタップ
-
-【Androidの場合 (Chrome)】
-
-Chromeでウェブサイトを開く
-
-右上の「︙」メニューをタップ
-
-「ホーム画面に追加」を選択
-
-画面の指示に従い「追加」をタップ
-        `;
-        
+        const instructions = [
+          'ホーム画面に追加する手順',
+          '',
+          '【iPhone/iPadの場合】',
+          'Safariでウェブサイトを開く',
+          '画面下部（または上部）の「共有」アイコンをタップ',
+          '「ホーム画面に追加」を選択',
+          '「追加」をタップ',
+          '',
+          '【Androidの場合 (Chrome)】',
+          'Chromeでウェブサイトを開く',
+          '右上の「︙」メニューをタップ',
+          '「ホーム画面に追加」を選択',
+          '画面の指示に従い「追加」をタップ'
+        ].join('\n');
         alert(instructions);
       }
       
