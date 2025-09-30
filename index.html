@@ -22,7 +22,7 @@
         <p class="modal-title" id="save-modal-title">保存方法を選択</p>
         
         <div class="modal-actions">
-          <a href="data:text/vcard;charset=utf-8,BEGIN%3AVCARD%0AVERSION%3A3.0%0AFN%3ARaiki%20Yamamoto%0AORG%3ALotus%20Card%0ATITLE%3A%E5%85%B1%E5%90%8CCEO%0AEMAIL%3Asoccer.6.yama6%40gmail.com%0AURL%3Ahttps%3A%2F%2Fraiki-ver-2.vercel.app%2F%0AEND%3AVCARD" download="Raiki_Yamamoto.vcf" class="modal-button"><img src="images/連絡先.png" alt="連絡先" class="modal-icon">連絡先に保存</a>
+          <a id="save-vcard-link" href="#" class="modal-button"><img src="images/連絡先.png" alt="連絡先" class="modal-icon">連絡先に保存</a>
 
           <a id="mail-self-link" href="#" class="modal-button"><img src="images/メール.png" alt="メール" class="modal-icon">メールを自分に送信</a>
 
@@ -117,6 +117,7 @@
       const closeModalBtn = document.getElementById('close-modal-button');
       const addToHomeBtn = document.getElementById('add-to-home-screen-button');
       const mailSelfLink = document.getElementById('mail-self-link');
+      const saveVcardLink = document.getElementById('save-vcard-link');
       let deferredPrompt;
       
       // Listen for the beforeinstallprompt event
@@ -149,6 +150,79 @@
       addToHomeBtn.addEventListener('click', () => {
         saveModal.style.display = 'none';
         showInstallInstructions();
+      });
+
+      // Build and download vCard with dynamic name and photo
+      saveVcardLink.addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        // Extract Japanese name from heading
+        const identityEl = document.querySelector('.identity-name');
+        let ownerNameJa = '名刺の持ち主';
+        if (identityEl) {
+          const cloned = identityEl.cloneNode(true);
+          const latin = cloned.querySelector('.latin');
+          if (latin) latin.remove();
+          ownerNameJa = (cloned.textContent || '').trim();
+        }
+
+        const ownerNameEn = (document.querySelector('.identity-name .latin')?.textContent || '');
+        const email = 'soccer.6.yama6@gmail.com';
+        const org = 'Lotus Card';
+        const title = '共同CEO';
+        const website = window.location.origin + window.location.pathname;
+        const photoUrl = document.querySelector('.hero-avatar')?.getAttribute('src') || 'images/Raiki.jpg';
+
+        // Fetch and base64 encode the photo for embedding
+        async function fetchAsBase64(url) {
+          try {
+            const res = await fetch(url, { mode: 'cors' });
+            const blob = await res.blob();
+            return await new Promise((resolve) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result.split(',')[1]);
+              reader.readAsDataURL(blob);
+            });
+          } catch (e) {
+            return '';
+          }
+        }
+
+        const base64Photo = await fetchAsBase64(photoUrl);
+
+        // Attempt to split name into family/given (simple heuristic)
+        let family = '', given = ownerNameJa;
+        if (ownerNameJa.includes(' ')) {
+          const parts = ownerNameJa.split(' ');
+          family = parts[0];
+          given = parts.slice(1).join(' ');
+        }
+
+        const lines = [
+          'BEGIN:VCARD',
+          'VERSION:3.0',
+          `FN:${ownerNameJa}${ownerNameEn ? ' / ' + ownerNameEn : ''}`,
+          `N:${family};${given};;;`,
+          `ORG:${org}`,
+          `TITLE:${title}`,
+          `EMAIL:${email}`,
+          `URL:${website}`,
+          base64Photo ? `PHOTO;ENCODING=b;TYPE=JPEG:${base64Photo}` : `PHOTO;VALUE=URI:${new URL(photoUrl, location.href).href}`,
+          'END:VCARD'
+        ];
+
+        const vcard = lines.join('\r\n');
+        const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        const safeName = ownerNameEn || ownerNameJa || 'contact';
+        a.href = url;
+        a.download = `${safeName.replace(/\s+/g, '_')}.vcf`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
       });
 
       
